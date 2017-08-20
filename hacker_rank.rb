@@ -1,3 +1,5 @@
+require 'set'
+
 # WARMUP
 
 # Source: https://www.hackerrank.com/challenges/mini-max-sum
@@ -97,18 +99,77 @@ puts missing_numbers(a, b) == [204, 205, 206]
 # Sample Input: k = 2, nums = [1, 5, 3, 4, 2]
 # Sample Output: 3
 
+def num_pairs(k, nums)
+  counts = count_occurences(nums)
+  pairs = 0
+  nums.each do |i|
+    if counts[i - k] > 0
+      pairs += counts[i - k]
+      counts[i] -= 1
+    end
+    if counts[i + k] > 0
+      pairs += counts[i + k]
+      counts[i] -= 1
+    end
+  end
+  pairs
+end
 
-
+puts num_pairs(2, [1, 5, 3, 4, 2]) == 3
+puts num_pairs(2, [1, 5, 3, 4, 4, 1, 2]) == 5
+puts num_pairs(1, [1, 1, 1, 1, 0, 2]) == 8
 
 # SORTING
 
 # Source: https://www.hackerrank.com/challenges/fraudulent-activity-notifications
-# HackerLand National Bank has a simple policy for warning clients about possible fraudulent account activity. If the amount spent by a client on a particular day is greater than or equal to 2x the client's median spending for the last d days, they send the client a notification about potential fraud. The bank doesn't send the client any notifications until they have at least d prior days of transaction data.
-# Given the value of d and a client's total daily expenditures for a period of n days, find and print the number of times the client will receive a notification over all n days.
-# Sample Input: d = 5, [2 3 4 2 3 6 8 4 5]
+# HackerLand National Bank has a simple policy for warning clients about possible
+# fraudulent account activity. If the amount spent by a client on a particular day
+# is greater than or equal to 2x the client's median spending for the last d days,
+# they send the client a notification about potential fraud. The bank doesn't send
+# the client any notifications until they have at least d prior days of transaction data.
+
+# Given the value of d and a client's total daily expenditures for a period of n days,
+# find and print the number of times the client will receive a notification over all n days.
+# Sample Input: d = 5, [2, 3, 4, 2, 3, 6, 8, 4, 5]
 # Sample Output: 2
 
+def fraudulent_activity(d, days)
+  frauds = 0
+  days.each_with_index do |day, idx|
+    sorted = (idx < d ? quicksort(days[0...idx]) : quicksort(days[(idx - d)...idx]))
+    median = get_median(sorted)
+    frauds += 1 if median && day >= 2 * median
+  end
+  frauds
+end
 
+def quicksort(arr)
+  return arr if arr.length <= 1
+  left = []
+  right = []
+  pivot = arr.first
+
+  arr[1..-1].each do |el|
+    if el <= pivot
+      left << el
+    else
+      right << el
+    end
+  end
+
+  quicksort(left) + [pivot] + quicksort(right)
+end
+
+def get_median(arr)
+  return nil if arr.empty?
+  if arr.length.odd?
+    arr[arr.length / 2]
+  else
+    (arr[(arr.length - 1) / 2] + arr[arr.length / 2]) / 2.0
+  end
+end
+
+puts fraudulent_activity(5, [2, 3, 4, 2, 3, 6, 8, 4, 5]) == 2
 
 
 # DYAMIC PROGRAMMING
