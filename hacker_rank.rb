@@ -1,15 +1,23 @@
 # WARMUP
 
 # Source: https://www.hackerrank.com/challenges/mini-max-sum
-# Given five positive integers, find the minimum and maximum values that can be calculated by summing exactly four of the five integers. Then print the respective minimum and maximum values as a single line of two space-separated long integers.
+# Given five positive integers, find the minimum and maximum values that can be
+# calculated by summing exactly four of the five integers. Then print the respective
+# minimum and maximum values as a single line of two space-separated long integers.
 # Sample Input: 1 2 3 4 5
 # Sample Output: 10 14
 
+def mini_max(nums)
+  sum = nums.reduce(:+)
+  { min: sum - nums.max, max: sum - nums.min }
+end
 
+puts mini_max([1, 2, 3, 4, 5]) == { min: 10, max: 14 }
 
 
 # Source: https://www.hackerrank.com/challenges/staircase
-# Observe that its base and height are both equal to , and the image is drawn using # symbols and spaces. The last line is not preceded by any spaces.
+# Observe that its base and height are both equal to n, and the image is drawn
+# using # symbols and spaces. The last line is not preceded by any spaces.
 # Sample Input: 6
 # Sample Output:
 #      #
@@ -19,8 +27,16 @@
 #  #####
 # ######
 
+def print_staircase(n)
+  spaces = n - 1
+  while spaces >= 0
+    puts " " * spaces + "#" * (n - spaces)
+    spaces -= 1
+  end
+end
 
-
+print_staircase(3)
+print_staircase(6)
 
 
 # Source: https://www.hackerrank.com/challenges/time-conversion`
@@ -28,22 +44,57 @@
 # Sample Input: 07:05:45PM
 # Sample Output: 19:05:45
 
+def military(timestring)
+  hr, min, sec = timestring.split(':')
+  if sec[-2..-1] == 'AM'
+    "#{hr}:#{min}:#{sec[0...-2]}"
+  else
+    "#{hr.to_i + 12}:#{min}:#{sec[0...-2]}"
+  end
+end
 
-
+puts military('07:05:45PM') == '19:05:45'
+puts military('07:05:45AM') == '07:05:45'
 
 # SEARCH
 
 # Source: https://www.hackerrank.com/challenges/missing-numbers
-# Numeros, the Artist, had two lists  and , such that  was a permutation of . Numeros was very proud of these lists. Unfortunately, while transporting them from one exhibition to another, some numbers were left out of . Can you find the missing numbers?
-# Sample Input: [203 204 205 206 207 208 203 204 205 206], [203 204 204 205 206 207 205 208 203 206 205 206 204]
+# Numeros, the Artist, had two lists a and b, such that b was a permutation of a.
+# Numeros was very proud of these lists. Unfortunately, while transporting them
+# from one exhibition to another, some numbers were left out of b.
+# Can you find the missing numbers?
+# Sample Input:
+# => a = [203 204 205 206 207 208 203 204 205 206]
+# => b = [203 204 204 205 206 207 205 208 203 206 205 206 204]
 # Sample Output: [204 205 206]
 
+def missing_numbers(a, b)
+  a_counts = count_occurences(a)
+  b_counts = count_occurences(b)
+  missing = []
+  b.each do |i|
+    missing << i if b_counts[i] != a_counts[i]
+  end
 
+  missing.uniq
+end
+
+def count_occurences(arr)
+  counts = Hash.new { |h, k| h[k] = 0 }
+  arr.each do |i|
+    counts[i] += 1
+  end
+  counts
+end
+
+a = [203, 204, 205, 206, 207, 208, 203, 204, 205, 206]
+b = [203, 204, 204, 205, 206, 207, 205, 208, 203, 206, 205, 206, 204]
+puts missing_numbers(a, b) == [204, 205, 206]
 
 
 # Source: https://www.hackerrank.com/challenges/pairs
 # Given n integers, count the number of pairs of integers whose difference is k.
-# Sample Input: [2, [ 1 5 3 4 2 ] ]
+# Sample Input: k = 2, nums = [1, 5, 3, 4, 2]
 # Sample Output: 3
 
 
