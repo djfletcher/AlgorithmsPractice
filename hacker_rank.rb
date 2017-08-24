@@ -14,7 +14,7 @@ def mini_max(nums)
   { min: sum - nums.max, max: sum - nums.min }
 end
 
-puts mini_max([1, 2, 3, 4, 5]) == { min: 10, max: 14 }
+# puts mini_max([1, 2, 3, 4, 5]) == { min: 10, max: 14 }
 
 
 # Source: https://www.hackerrank.com/challenges/staircase
@@ -37,8 +37,8 @@ def print_staircase(n)
   end
 end
 
-print_staircase(3)
-print_staircase(6)
+# print_staircase(3)
+# print_staircase(6)
 
 
 # Source: https://www.hackerrank.com/challenges/time-conversion`
@@ -55,8 +55,8 @@ def military(timestring)
   end
 end
 
-puts military('07:05:45PM') == '19:05:45'
-puts military('07:05:45AM') == '07:05:45'
+# puts military('07:05:45PM') == '19:05:45'
+# puts military('07:05:45AM') == '07:05:45'
 
 # SEARCH
 
@@ -89,9 +89,9 @@ def count_occurences(arr)
   counts
 end
 
-a = [203, 204, 205, 206, 207, 208, 203, 204, 205, 206]
-b = [203, 204, 204, 205, 206, 207, 205, 208, 203, 206, 205, 206, 204]
-puts missing_numbers(a, b) == [204, 205, 206]
+# a = [203, 204, 205, 206, 207, 208, 203, 204, 205, 206]
+# b = [203, 204, 204, 205, 206, 207, 205, 208, 203, 206, 205, 206, 204]
+# puts missing_numbers(a, b) == [204, 205, 206]
 
 
 # Source: https://www.hackerrank.com/challenges/pairs
@@ -115,9 +115,9 @@ def num_pairs(k, nums)
   pairs
 end
 
-puts num_pairs(2, [1, 5, 3, 4, 2]) == 3
-puts num_pairs(2, [1, 5, 3, 4, 4, 1, 2]) == 5
-puts num_pairs(1, [1, 1, 1, 1, 0, 2]) == 8
+# puts num_pairs(2, [1, 5, 3, 4, 2]) == 3
+# puts num_pairs(2, [1, 5, 3, 4, 4, 1, 2]) == 5
+# puts num_pairs(1, [1, 1, 1, 1, 0, 2]) == 8
 
 # SORTING
 
@@ -169,14 +169,51 @@ def get_median(arr)
   end
 end
 
-puts fraudulent_activity(5, [2, 3, 4, 2, 3, 6, 8, 4, 5]) == 2
+# puts fraudulent_activity(5, [2, 3, 4, 2, 3, 6, 8, 4, 5]) == 2
 
 
 # DYAMIC PROGRAMMING
 
+# Fibonacci - find the nth fibonacci number
+# sequence = [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+
+def fibonacci(n, memo = { 0 => nil, 1 => 0, 2 => 1 })
+  return memo[n] if memo[n]
+  memo[n - 1] = fibonacci(n - 1, memo)
+  memo[n - 2] = fibonacci(n - 2, memo)
+  memo[n] = memo[n - 1] + memo[n - 2]
+end
+
+def fibonacci(n, memo = { 0 => [], 1 => [0], 2 => [0, 1] })
+  return memo[n] if memo[n]
+  memo[n - 1] = fibonacci(n - 1, memo)
+  memo[n - 2] = fibonacci(n - 2, memo)
+  next_num = memo[n - 1].last + memo[n - 2].last
+  memo[n] = memo[n - 1] + [next_num]
+end
+
+
 # Source: https://www.hackerrank.com/challenges/coin-change
 # Coin change problem => how many different ways are there to make change
+# Sample Input: target = 4, coins = [1, 2, 3]
+# Sample Output: 4 => ([1,1,1,1], [1,1,2], [1,3], [2,2])
 
+def make_change(target, coins, memo = {})
+  return 0 if target < coins.min
+  return memo[target] if memo[target]
+  memo[target] = 0
+  coins.each do |coin|
+    if coin == target
+      memo[target] += 1
+    elsif coin < target
+      memo[target] += make_change(target - coin, coins, memo)
+    end
+  end
+  puts memo
+  memo[target]
+end
+
+puts make_change(4, [1, 2, 3])
 
 
 # Source: https://www.hackerrank.com/challenges/candies
