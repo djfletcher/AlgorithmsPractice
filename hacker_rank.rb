@@ -209,11 +209,28 @@ def make_change(target, coins, memo = {})
       memo[target] += make_change(target - coin, coins, memo)
     end
   end
-  puts memo
+
   memo[target]
 end
 
 puts make_change(4, [1, 2, 3])
+
+
+def make_minimum_change(amt, coins, memo = {})
+  return memo[amt] if memo[amt] && memo[amt] < Float::INFINITY
+  return memo[amt] = 1 if coins.any? { |coin| coin == amt }
+  memo[amt] = Float::INFINITY
+
+  coins.each do |coin|
+    next if amt < coin
+    possible_min = make_minimum_change(amt - coin, coins, memo) + 1
+    memo[amt] = possible_min if possible_min < memo[amt]
+  end
+
+  memo[amt]
+end
+
+puts make_minimum_change(4, [1, 2, 3])
 
 
 # Source: https://www.hackerrank.com/challenges/candies
